@@ -49,10 +49,16 @@ nav {
     color: rgb(200, 200, 200);
 }
 
+.dealer {
+	text-align: center;
+}
+
+.player	{
+	text-align: center;
+}
 
 .dealerbackground {
     opacity: 80%;
     max-width: 60%;
-    margin-left: 20%;
     z-index: 1;
 }
