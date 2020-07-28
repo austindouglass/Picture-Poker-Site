@@ -20,8 +20,8 @@ deck will be 30 cards (5 cards per value)
 var deck = resetDeck();
 var dealersHand = [];
 var playersHand = [];
-var numberToCard = {1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
-                    4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'}
+var numberToCard = {0 : 'back-mountain.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
+                    4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 
 var result = setHand(5, deck);
 dealersHand = result[0];
@@ -55,11 +55,13 @@ function setHand(handSize, deck)  {
 
 //displayCards - converts number into displayable cards in html
 function displayCards(cards, id, numberToCard)    {
-    var i, cardImgs, cardType;
+    var i, cardImgs, cardType, 
+    flipOnClick = "onclick=\"flipCard([" + cards.toString() + "], ";
     cardImgs = "";
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\"></img>";
+        cardImgs += "<img src=\"images/cards/" + cardType + "\" ></img>";
+        cardImgs += flipOnClick + i
     }
     document.getElementById(id).innerHTML  = cardImgs;
 }
