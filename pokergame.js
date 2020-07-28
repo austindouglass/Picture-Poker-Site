@@ -17,12 +17,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-var deck = [1, 1, 1, 1, 1,
-            2, 2, 2, 2, 2,
-            3, 3, 3, 3, 3,
-            4, 4, 4, 4, 4,
-            5, 5, 5, 5, 5,
-            6, 6, 6, 6, 6];
+var deck = resetDeck();
 var dealersHand = [];
 var playersHand = [];
 
@@ -52,4 +47,14 @@ function setHand(handSize, deck)  {
     console.log("new hand: " + hand.toString());
     console.log(deck.toString());
     return [hand, deck];
+}
+
+//resetDeck - returns array of 5 numbers each
+function resetDeck()    {
+    return [1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4,
+            5, 5, 5, 5, 5,
+            6, 6, 6, 6, 6];
 }
