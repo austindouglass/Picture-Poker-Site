@@ -17,9 +17,39 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-var deck = [];
-var dealersHand = [1, 2, 3, 4, 5];
-var playersHand = [6, 3, 2, 1, 0];
+var deck = [1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4,
+            5, 5, 5, 5, 5,
+            6, 6, 6, 6, 6];
+var dealersHand = [];
+var playersHand = [];
 
-document.getElementById("dealercards").innerHTML = dealersHand.toString().replace(/,/g, ' ');
-document.getElementById("playercards").innerHTML = playersHand.toString().replace(/,/g, ' ');
+var result = setHand(5, deck);
+dealersHand = result[0];
+deck = result[1];
+
+result = setHand(5, deck);
+playersHand = result[0];
+deck = result[1];
+
+document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
+document.getElementById("playercards").innerHTML = playersHand.join(' ');
+
+//setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
+function setHand(handSize, deck)  { 
+    console.log("--in setHand()--");
+    console.log(deck.toString());
+
+    var i, draw, hand = [];
+    for(i = 0; i < handSize; ++i)  {
+        draw = Math.floor(Math.random()*deck.length);
+        hand.push(deck[draw]);
+        deck.splice(draw, 1);
+    }
+
+    console.log("new hand: " + hand.toString());
+    console.log(deck.toString());
+    return [hand, deck];
+}
