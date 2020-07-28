@@ -19,7 +19,9 @@ deck will be 30 cards (5 cards per value)
 
 var deck = resetDeck();
 var dealersHand = [];
+var dHandBackup = [];
 var playersHand = [];
+var pHandBackup = [];
 var numberToCard = {0 : 'back-mountain.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 
@@ -32,8 +34,8 @@ playersHand = result[0];
 deck = result[1];
 
 //document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
-displayCards(dealersHand, "dealercards", numberToCard);
 //document.getElementById("playercards").innerHTML = playersHand.join(' ');
+displayCards(dealersHand, "dealercards", numberToCard);
 displayCards(playersHand, "playercards", numberToCard);
 
 //setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
@@ -53,15 +55,24 @@ function setHand(handSize, deck)  {
     return [hand, deck];
 }
 
+//need to know which cards are whose
+function flipCard(cards, flipNum) {
+
+    cards[flipNum] = 0;
+    displayCards(dealersHand, "dealercards", numberToCard);
+    displayCards(playersHand, "playercards", numberToCard);
+
+}
+
 //displayCards - converts number into displayable cards in html
+//attempting to add onclick event for flipping / selecting a card
 function displayCards(cards, id, numberToCard)    {
-    var i, cardImgs, cardType, 
+    var i, cardImgs = "", cardType, 
     flipOnClick = "onclick=\"flipCard([" + cards.toString() + "], ";
-    cardImgs = "";
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
         cardImgs += "<img src=\"images/cards/" + cardType + "\" ></img>";
-        cardImgs += flipOnClick + i
+        cardImgs += flipOnClick + i + "";
     }
     document.getElementById(id).innerHTML  = cardImgs;
 }
