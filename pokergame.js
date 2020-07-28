@@ -55,11 +55,25 @@ function setHand(handSize, deck)  {
     return [hand, deck];
 }
 
-//need to know which cards are whose
-function flipCard(cards, flipNum) {
+//flipCard - flips cards to select for redraw
+function flipCard(flipNum) {
+    var i, backupCards = true;
+    for(i=0; i<playersHand.length; ++i)   {
+        if(playersHand[i] == 0)   {
+            backupCards = false;
+            break;
+        }
+    }
+    if(backupCards) {
+        pHandBackup = [...playersHand];
+    }
+    if(playersHand[flipNum] != 0)   {
+        playersHand[flipNum] = 0;
+    }
+    else    {
+        playersHand[flipNum] = pHandBackup[flipNum];
+    }
 
-    cards[flipNum] = 0;
-    displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
 
 }
@@ -67,12 +81,14 @@ function flipCard(cards, flipNum) {
 //displayCards - converts number into displayable cards in html
 //attempting to add onclick event for flipping / selecting a card
 function displayCards(cards, id, numberToCard)    {
-    var i, cardImgs = "", cardType, 
-    flipOnClick = "onclick=\"flipCard([" + cards.toString() + "], ";
+    var i, cardImgs = "", cardType;
+    //flipOnClick = "onclick=\"flipCard(" + cards.toString() + " ";
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\" ></img>";
-        cardImgs += flipOnClick + i + "";
+        cardImgs += "<img src=\"images/cards/" + cardType + "\" "; //></img>";
+        flipOnClick = "onclick=\"flipCard(" + i + ")\"></img>";
+        cardImgs += flipOnClick;
+        //cardImgs += flipOnClick + i + "";
     }
     document.getElementById(id).innerHTML  = cardImgs;
 }
