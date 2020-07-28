@@ -30,6 +30,7 @@ playersHand = result[0];
 deck = result[1];
 
 document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
+displayCards(dealersHand, "dealercards");
 document.getElementById("playercards").innerHTML = playersHand.join(' ');
 
 //setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
@@ -47,6 +48,16 @@ function setHand(handSize, deck)  {
     console.log("new hand: " + hand.toString());
     console.log(deck.toString());
     return [hand, deck];
+}
+
+function displayCards(cards, id)    {
+    var i, cardImgs, cardType;
+    cardType = "spade.png";
+    cardImgs = "";
+    for(i=0; i<cards.length; ++i)   {
+        cardImgs += "<img src=\"images/cards/" + cardType + "\"></img>";
+    }
+    document.getElementById(id).innerHTML  = cardImgs;
 }
 
 //resetDeck - returns array of 5 numbers each

@@ -53,6 +53,13 @@ nav {
 	text-align: center;
 }
 
+.cards {
+	display: flex;
+	max-width: 10%;
+	z-index: 2;
+	margin-left: 25%;
+}
+
 .player	{
 	text-align: center;
 }
