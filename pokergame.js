@@ -31,9 +31,10 @@ result = setHand(5, deck);
 playersHand = result[0];
 deck = result[1];
 
-document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
+//document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
 displayCards(dealersHand, "dealercards", numberToCard);
-document.getElementById("playercards").innerHTML = playersHand.join(' ');
+//document.getElementById("playercards").innerHTML = playersHand.join(' ');
+displayCards(playersHand, "playercards", numberToCard);
 
 //setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
 function setHand(handSize, deck)  { 
@@ -52,10 +53,12 @@ function setHand(handSize, deck)  {
     return [hand, deck];
 }
 
+//displayCards - converts number into displayable cards in html
 function displayCards(cards, id, numberToCard)    {
     var i, cardImgs, cardType;
     cardImgs = "";
     for(i=0; i<cards.length; ++i)   {
+        cardType = numberToCard[cards[i]];
         cardImgs += "<img src=\"images/cards/" + cardType + "\"></img>";
     }
     document.getElementById(id).innerHTML  = cardImgs;
