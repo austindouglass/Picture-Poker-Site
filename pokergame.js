@@ -79,15 +79,20 @@ function flipCard(flipNum) {
 }
 
 //displayCards - converts number into displayable cards in html
-//attempting to add onclick event for flipping / selecting a card
+//bug when clicking dealers cards it flips players cards ** change flip on click
 function displayCards(cards, id, numberToCard)    {
     var i, cardImgs = "", cardType;
     //flipOnClick = "onclick=\"flipCard(" + cards.toString() + " ";
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\" "; //></img>";
-        flipOnClick = "onclick=\"flipCard(" + i + ")\"></img>";
-        cardImgs += flipOnClick;
+        cardImgs += "<img src=\"images/cards/" + cardType + "\""; //></img>";
+        if(id == "playercards") {
+            flipOnClick = " onclick=\"flipCard(" + i + ")\"></img>";
+            cardImgs += flipOnClick;
+        }
+        else    {
+            cardImgs += "></img>";
+        }
         //cardImgs += flipOnClick + i + "";
     }
     document.getElementById(id).innerHTML  = cardImgs;
