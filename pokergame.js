@@ -55,19 +55,23 @@ function setHand(handSize, deck)  {
     return [hand, deck];
 }
 
-//flipCard - flips cards to select for redraw
-function flipCard(flipNum) {
-    var i, backupCards = true;
-    for(i=0; i<playersHand.length; ++i)   {
-        if(playersHand[i] == 0)   {
-            backupCards = false;
-            break;
+//checkForSelection - returns true if a card is 0
+function checkForSelection(cards, length)   {
+    var i;
+    for(i=0; i < length; ++i)   {
+        if(cards[i] == 0)   {
+            return true;
         }
     }
-    if(backupCards) {
+    return false;
+}
+
+//flipCard - flips cards to select for redraw
+function flipCard(flipNum) {    
+    if(!checkForSelection(playersHand, playersHand.length)) {
         pHandBackup = [...playersHand];
     }
-    if(playersHand[flipNum] != 0)   {
+    if(playersHand[flipNum])   {
         playersHand[flipNum] = 0;
     }
     else    {
