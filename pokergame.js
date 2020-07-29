@@ -37,6 +37,20 @@ deck = result[1];
 //document.getElementById("playercards").innerHTML = playersHand.join(' ');
 displayCards(dealersHand, "dealercards", numberToCard);
 displayCards(playersHand, "playercards", numberToCard);
+drawButton();
+
+
+
+function drawButton()   {
+    var buttonHtml;
+    if(checkForSelection(playersHand, playersHand.length))  {
+        buttonHtml  = "<img src=\"images/ui/button-draw.png\" ></img>";
+    }
+    else    {
+        buttonHtml  = "<img src=\"images/ui/button-hold.png\" ></img>";
+    }
+    document.getElementById("playerbutton").innerHTML  = buttonHtml;
+}
 
 //setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
 function setHand(handSize, deck)  { 
@@ -79,6 +93,7 @@ function flipCard(flipNum) {
     }
 
     displayCards(playersHand, "playercards", numberToCard);
+    drawButton();
 
 }
 
