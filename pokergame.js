@@ -17,6 +17,8 @@ deck will be 30 cards (5 cards per value)
 
 */
 
+//current objective: hitting draw changes hand
+
 var deck = resetDeck();
 var dealersHand = [];
 var dHandBackup = [];
@@ -40,11 +42,24 @@ displayCards(playersHand, "playercards", numberToCard);
 drawButton();
 
 
+//newHand - replaces players selected cards when clicking draw button
+function newHand()  {
+    var i;
+    for(i = 0; i < playersHand.length; ++i)  {
+        if(playersHand[i] == 0) {
+            draw = Math.floor(Math.random()*deck.length);
+            playersHand[i] = deck[draw];
+            deck.splice(draw, 1);
+        }
+    }
+    displayCards(playersHand, "playercards", numberToCard);
+    drawButton();
+}
 
 function drawButton()   {
     var buttonHtml;
     if(checkForSelection(playersHand, playersHand.length))  {
-        buttonHtml  = "<img src=\"images/ui/button-draw.png\" ></img>";
+        buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\"></img>";
     }
     else    {
         buttonHtml  = "<img src=\"images/ui/button-hold.png\" ></img>";
@@ -53,19 +68,13 @@ function drawButton()   {
 }
 
 //setHand - draws 5 random cards from the deck, returns list of 5 cards & new deck
-function setHand(handSize, deck)  { 
-    console.log("--in setHand()--");
-    console.log(deck.toString());
-
+function setHand(handSize, deck)  {
     var i, draw, hand = [];
     for(i = 0; i < handSize; ++i)  {
         draw = Math.floor(Math.random()*deck.length);
         hand.push(deck[draw]);
         deck.splice(draw, 1);
     }
-
-    console.log("new hand: " + hand.toString());
-    console.log(deck.toString());
     return [hand, deck];
 }
 
@@ -98,10 +107,8 @@ function flipCard(flipNum) {
 }
 
 //displayCards - converts number into displayable cards in html
-//bug when clicking dealers cards it flips players cards ** change flip on click
 function displayCards(cards, id, numberToCard)    {
     var i, cardImgs = "", cardType;
-    //flipOnClick = "onclick=\"flipCard(" + cards.toString() + " ";
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
         cardImgs += "<img src=\"images/cards/" + cardType + "\""; //></img>";
@@ -112,9 +119,8 @@ function displayCards(cards, id, numberToCard)    {
         else    {
             cardImgs += "></img>";
         }
-        //cardImgs += flipOnClick + i + "";
     }
-    document.getElementById(id).innerHTML  = cardImgs;
+    document.getElementById(id).innerHTML = cardImgs;
 }
 
 //resetDeck - returns array of 5 numbers each
