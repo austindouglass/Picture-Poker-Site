@@ -1,15 +1,11 @@
 /*
 Reminder for things that will need to be done:
--display number cards
--create deck
--make drawing cards random
 -selecting hold/draw
 -selecting bet
 -update for win
 -update for lose
 -update for draw
--display cards
--this is just to test change
+-display money / bet
 
 deck layout:
 card values will go from 1-6
@@ -17,7 +13,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: hitting draw changes hand
+//current objective: algorithm for dealer card draws
 
 var deck = resetDeck();
 var dealersHand = [];
@@ -35,11 +31,42 @@ result = setHand(5, deck);
 playersHand = result[0];
 deck = result[1];
 
-//document.getElementById("dealercards").innerHTML = dealersHand.join(' ');
-//document.getElementById("playercards").innerHTML = playersHand.join(' ');
 displayCards(dealersHand, "dealercards", numberToCard);
 displayCards(playersHand, "playercards", numberToCard);
 drawButton();
+
+//newDealerHand - checks for non matches and redraws those cards
+function newDealerHand()    {
+    dHandBackup = [...dealersHand];
+    var i, j, draw, matches = 0;
+
+    //card selection algorithm O(n^2) (but n should always be 5 in our game)
+    for(i=0; i<dealersHand.length; ++i) {
+        if(dealersHand[i] != -1)   {         //-1 signals that there is a match in this spot
+            for(j=i+1; j<dealersHand.length; ++j)    {
+                if(dealersHand[i] == dealersHand[j])    {
+                    dealersHand[j] = -1;
+                    ++matches;
+                }
+            }
+            if(matches)
+                dealersHand[i] = -1;
+        }
+        matches = 0;
+    }
+
+    //drawing new cards
+    for(i=0; i<dealersHand.length; ++i)    {
+        if(dealersHand[i] == -1)    
+            dealersHand[i] = dHandBackup[i];
+        else    {
+            draw = Math.floor(Math.random()*deck.length);
+            dealersHand[i] = deck[draw];
+            deck.splice(draw, 1);
+            deck.push(dHandBackup[i]);
+        }
+    }
+}
 
 
 //newHand - replaces players selected cards when clicking draw button
@@ -53,10 +80,14 @@ function newHand()  {
             deck.push(pHandBackup[i]);
         }
     }
+    //possibly remove these in place for an endRound function of some sort (getting rid of drawB and hold case setup)
+    newDealerHand();
+    displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
     drawButton();
 }
 
+//drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
     var buttonHtml;
     if(checkForSelection(playersHand, playersHand.length))  {
@@ -79,7 +110,7 @@ function setHand(handSize, deck)  {
     return [hand, deck];
 }
 
-//checkForSelection - returns true if a card is 0
+//checkForSelection - returns true if a card is 0 (meaning selected by player)
 function checkForSelection(cards, length)   {
     var i;
     for(i=0; i < length; ++i)   {
@@ -91,7 +122,8 @@ function checkForSelection(cards, length)   {
 }
 
 //flipCard - flips cards to select for redraw
-function flipCard(flipNum) {    
+function flipCard(flipNum) {
+    //if player has not selected card
     if(!checkForSelection(playersHand, playersHand.length)) {
         pHandBackup = [...playersHand];
     }
