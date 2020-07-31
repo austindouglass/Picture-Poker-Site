@@ -50,6 +50,7 @@ function newHand()  {
             draw = Math.floor(Math.random()*deck.length);
             playersHand[i] = deck[draw];
             deck.splice(draw, 1);
+            deck.push(pHandBackup[i]);
         }
     }
     displayCards(playersHand, "playercards", numberToCard);
