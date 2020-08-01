@@ -6,6 +6,9 @@ Reminder for things that will need to be done:
 -update for lose
 -update for draw
 -display money / bet
+-add cheat protection? (users can't easily read dealers card array)
+    --not sure if this is worth doing as knowing the dealers cards do not guarantee any win
+    --it really just helps prevents a big loss
 
 deck layout:
 card values will go from 1-6
@@ -13,7 +16,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: algorithm for dealer card draws
+//current objective: implement hold functionality / determine winner
 
 var deck = resetDeck();
 var dealersHand = [];
@@ -34,6 +37,116 @@ deck = result[1];
 displayCards(dealersHand, "dealercards", numberToCard);
 displayCards(playersHand, "playercards", numberToCard);
 drawButton();
+
+//compareMatches - returns if the player won or lost through matches
+function compareMatches(pvalue, dvalue)   {
+    if(pvalue > dvalue) {
+        return 'YOU WON';
+    }
+    else if(pvalue < dvalue)    {
+        return 'YOU LOSE';
+    }
+    else    {
+        return 'TIE';
+    }
+}
+
+//whoWon - returns the player result by comparing matches
+//need to check lengths of each for 0,1, and 2
+function whoWon(pmatches, dmatches) {
+    console.log('----whoWon----');
+    console.log(pmatches);
+    console.log(dmatches);
+    //makes sure there is at least 1 match
+    if(pmatches.length > 0 && dmatches.length == 0) {
+        return 'YOU WON';
+    }
+    else if(pmatches.length == 0 && dmatches.length > 0)    {
+        return 'YOU LOSE';
+    }
+    else if(pmatches.length == 0 && dmatches.length == 0)   {
+        return 'TIE';
+    }
+    //compare highest matches amount
+    var result = compareMatches(pmatches[0][0], dmatches[0][0]);
+    if(result == 'TIE') {
+        //compare highest match card value
+        result = compareMatches(pmatches[0][1], dmatches[0][1]);
+        if(result == 'TIE') {
+            //makes sure there is at least 2 matches
+            if(pmatches.length > 1 && dmatches.length == 1) {
+                return 'YOU WON';
+            }
+            else if(pmatches.length == 1 && dmatches.length > 1)    {
+                return 'YOU LOSE';
+            }
+            else if(pmatches.length == 1 && dmatches.length == 1)   {
+                return 'TIE';
+            }
+            //compare second match amount
+            result = compareMatches(pmatches[1][0], dmatches[1][0]);
+            if(result == 'TIE') {
+                //compare second match card value
+                result = compareMatches(pmatches[1][1], dmatches[1][1]);
+            }
+        }
+    }
+    return result;
+}
+
+//determineWinner - checks matches for both hands and returns player game result
+function determineWinner()   {
+    dHandBackup = [...dealersHand];
+    pHandBackup = [...playersHand];
+    var i, j, draw, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
+
+    for(i=0; i<dealersHand.length; ++i) {
+        if(dealersHand[i] != -1 || playersHand[i] != -1)    {
+            for(j=i+1; j<dealersHand.length; ++j)    {
+                if(dealersHand[i] != -1 && dealersHand[i] == dealersHand[j])    {
+                    dealersHand[j] = -1;
+                    ++dmatch;
+                }
+                if(playersHand[i] != -1 && playersHand[i] == playersHand[j])    {
+                    playersHand[j] = -1;
+                    ++pmatch;
+                }
+            }
+            
+            if(dmatch > 1)  {
+                if(!dmatches.length || dmatch > dmatches[0][0])    {
+                    dmatches.unshift([dmatch, dealersHand[i]]);
+                }
+                else{
+                    dmatches.push([dmatch, dealersHand[i]]);
+                }
+            }
+            if(pmatch > 1)  {
+                if(!pmatches.length || pmatch > pmatches[0][0])    {
+                    pmatches.unshift([pmatch, playersHand[i]]);
+                }
+                else{
+                    pmatches.push([pmatch, playersHand[i]]);
+                }
+            }
+
+            if(dmatch)
+                dealersHand[i] = -1;
+            if(pmatch)
+                playersHand[i] = -1;
+            
+            dmatch = 1;
+            pmatch = 1;
+        }
+    }
+
+    //print winner
+    console.log(whoWon(pmatches, dmatches));
+
+    playersHand = [...pHandBackup];
+    dealersHand = [...dHandBackup];
+}
+
 
 //newDealerHand - checks for non matches and redraws those cards
 function newDealerHand()    {
@@ -94,7 +207,7 @@ function drawButton()   {
         buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\"></img>";
     }
     else    {
-        buttonHtml  = "<img src=\"images/ui/button-hold.png\" ></img>";
+        buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\"></img>";
     }
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
