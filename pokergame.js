@@ -137,7 +137,8 @@ function determineWinner()   {
             }
             
             if(dmatch > 1)  {
-                if(!dmatches.length || dmatch > dmatches[0][0])    {
+                if(!dmatches.length || dmatch > dmatches[0][0] || 
+                    (dmatch == dmatches[0][0] && dealersHand[i] > dmatches[0][1]))    {
                     dmatches.unshift([dmatch, dealersHand[i]]);
                 }
                 else{
@@ -145,7 +146,8 @@ function determineWinner()   {
                 }
             }
             if(pmatch > 1)  {
-                if(!pmatches.length || pmatch > pmatches[0][0])    {
+                if(!pmatches.length || pmatch > pmatches[0][0] ||
+                    (pmatch == pmatches[0][0] && playersHand[i] > pmatches[0][1]))    {
                     pmatches.unshift([pmatch, playersHand[i]]);
                 }
                 else{
