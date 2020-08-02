@@ -17,28 +17,40 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: change pointer for clickable images
+//current objective: make setting and resetting game easier
 
-var deck = resetDeck();
 var dealersHand = [];
 var dHandBackup = [];
 var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back-mountain.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
-var draw = 0;       //used to limit draws
+var result, deck, draw;
 
-var result = setHand(5, deck);
-dealersHand = result[0];
-deck = result[1];
+setupGame();
 
-result = setHand(5, deck);
-playersHand = result[0];
-deck = result[1];
+//setupGame - core game components are ready for starting game
+function setupGame()    {
+    draw = 0;
+    deck = resetDeck();
+    result = setHand(5, deck);
+    dealersHand = result[0];
+    deck = result[1];
 
-displayCards(dealersHand, "dealercards", numberToCard);
-displayCards(playersHand, "playercards", numberToCard);
-drawButton();
+    result = setHand(5, deck);
+    playersHand = result[0];
+    deck = result[1];
+
+    displayCards([0,0,0,0,0], "dealercards", numberToCard);
+    displayCards(playersHand, "playercards", numberToCard);
+    drawButton();
+}
+
+//newRoundButton - clicking button starts new round
+function newRoundButton()    {
+    var buttonHtml = "<img src=\"images/ui/button-hold.png\" onclick=\"setupGame()\" style=\"cursor: pointer;\"></img>";
+    document.getElementById("playerbutton").innerHTML  = buttonHtml;
+}
 
 //compareMatches - returns if the player won or lost through matches
 function compareMatches(pvalue, dvalue)   {
@@ -54,7 +66,6 @@ function compareMatches(pvalue, dvalue)   {
 }
 
 //whoWon - returns the player result by comparing matches
-//need to check lengths of each for 0,1, and 2
 function whoWon(pmatches, dmatches) {
     console.log('----whoWon----');
     console.log(pmatches);
@@ -103,8 +114,8 @@ function determineWinner()   {
     if(draw == 1)   {
         newDealerHand();
     }
-    //dealersHand.sort();
-    //playersHand.sort();
+    dealersHand.sort();
+    playersHand.sort();
     dHandBackup = [...dealersHand];
     pHandBackup = [...playersHand];
     displayCards(dealersHand, "dealercards", numberToCard);
@@ -155,8 +166,9 @@ function determineWinner()   {
     //print winner
     console.log(whoWon(pmatches, dmatches));
 
-    playersHand = [...pHandBackup];
-    dealersHand = [...dHandBackup];
+    //playersHand = [...pHandBackup];
+    //dealersHand = [...dHandBackup];
+    newRoundButton();
 }
 
 
@@ -249,7 +261,7 @@ function checkForSelection(cards, length)   {
 
 //flipCard - flips cards to select for redraw
 function flipCard(flipNum) {
-    //if player has not selected card
+    //if player has no selected cards
     if(!checkForSelection(playersHand, playersHand.length)) {
         pHandBackup = [...playersHand];
     }
@@ -270,7 +282,7 @@ function displayCards(cards, id, numberToCard)    {
     var i, cardImgs = "", cardType;
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\""; //></img>";
+        cardImgs += "<img src=\"images/cards/" + cardType + "\"";
         if(id == "playercards" && draw == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
