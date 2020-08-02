@@ -9,6 +9,7 @@ Reminder for things that will need to be done:
 -add cheat protection? (users can't easily read dealers card array)
     --not sure if this is worth doing as knowing the dealers cards do not guarantee any win
     --it really just helps prevents a big loss
+-dont forget to clear hands and resetDeck after a round
 
 deck layout:
 card values will go from 1-6
@@ -16,7 +17,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: implement hold functionality / determine winner
+//current objective: limit draw turns to 1
 
 var deck = resetDeck();
 var dealersHand = [];
@@ -25,6 +26,7 @@ var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back-mountain.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
+var draw = 0;       //used to limit draws
 
 var result = setHand(5, deck);
 dealersHand = result[0];
@@ -96,9 +98,13 @@ function whoWon(pmatches, dmatches) {
 
 //determineWinner - checks matches for both hands and returns player game result
 function determineWinner()   {
+    //makes sure cant draw cards after hold
+    ++draw;
+    displayCards(playersHand, "playercards", numberToCard);
+    
     dHandBackup = [...dealersHand];
     pHandBackup = [...playersHand];
-    var i, j, draw, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
+    var i, j, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
 
     for(i=0; i<dealersHand.length; ++i) {
         if(dealersHand[i] != -1 || playersHand[i] != -1)    {
@@ -184,6 +190,7 @@ function newDealerHand()    {
 
 //newHand - replaces players selected cards when clicking draw button
 function newHand()  {
+    ++draw;
     var i;
     for(i = 0; i < playersHand.length; ++i)  {
         if(playersHand[i] == 0) {
@@ -258,7 +265,7 @@ function displayCards(cards, id, numberToCard)    {
     for(i=0; i<cards.length; ++i)   {
         cardType = numberToCard[cards[i]];
         cardImgs += "<img src=\"images/cards/" + cardType + "\""; //></img>";
-        if(id == "playercards") {
+        if(id == "playercards" && draw == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\"></img>";
             cardImgs += flipOnClick;
         }
