@@ -100,10 +100,16 @@ function whoWon(pmatches, dmatches) {
 function determineWinner()   {
     //makes sure cant draw cards after hold
     ++draw;
-    displayCards(playersHand, "playercards", numberToCard);
-
+    if(draw == 1)   {
+        newDealerHand();
+    }
+    //dealersHand.sort();
+    //playersHand.sort();
     dHandBackup = [...dealersHand];
     pHandBackup = [...playersHand];
+    displayCards(dealersHand, "dealercards", numberToCard);
+    displayCards(playersHand, "playercards", numberToCard);
+
     var i, j, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
 
     for(i=0; i<dealersHand.length; ++i) {
