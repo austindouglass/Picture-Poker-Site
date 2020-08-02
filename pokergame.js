@@ -17,7 +17,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: limit draw turns to 1
+//current objective: allow dealer to redraw once even if player holds
 
 var deck = resetDeck();
 var dealersHand = [];
@@ -101,7 +101,7 @@ function determineWinner()   {
     //makes sure cant draw cards after hold
     ++draw;
     displayCards(playersHand, "playercards", numberToCard);
-    
+
     dHandBackup = [...dealersHand];
     pHandBackup = [...playersHand];
     var i, j, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
