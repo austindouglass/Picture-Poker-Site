@@ -17,7 +17,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: allow dealer to redraw once even if player holds
+//current objective: change pointer for clickable images
 
 var deck = resetDeck();
 var dealersHand = [];
@@ -217,10 +217,10 @@ function newHand()  {
 function drawButton()   {
     var buttonHtml;
     if(checkForSelection(playersHand, playersHand.length))  {
-        buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\"></img>";
+        buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\" style=\"cursor: pointer;\"></img>";
     }
     else    {
-        buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\"></img>";
+        buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" style=\"cursor: pointer;\"></img>";
     }
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
@@ -272,7 +272,7 @@ function displayCards(cards, id, numberToCard)    {
         cardType = numberToCard[cards[i]];
         cardImgs += "<img src=\"images/cards/" + cardType + "\""; //></img>";
         if(id == "playercards" && draw == 0) {
-            flipOnClick = " onclick=\"flipCard(" + i + ")\"></img>";
+            flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
         }
         else    {
