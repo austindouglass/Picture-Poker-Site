@@ -48,7 +48,8 @@ function setupGame()    {
 
 //newRoundButton - clicking button starts new round
 function newRoundButton()    {
-    var buttonHtml = "<img src=\"images/ui/button-hold.png\" onclick=\"setupGame()\" style=\"cursor: pointer;\"></img>";
+    var style = "style=\"cursor: pointer; max-width: 60%;\""
+    var buttonHtml = "<img src=\"images/ui/button-hold.png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
 
@@ -229,12 +230,12 @@ function newHand()  {
 
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
-    var buttonHtml;
+    var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%;\""
     if(checkForSelection(playersHand, playersHand.length))  {
-        buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\" style=\"cursor: pointer;\"></img>";
+        buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\" " + style + "></img>";
     }
     else    {
-        buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" style=\"cursor: pointer;\"></img>";
+        buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" " + style + "></img>";
     }
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
