@@ -47,19 +47,19 @@ function setupGame()    {
 }
 
 //newRoundButton - clicking button starts new round
-function newRoundButton()    {
+function newRoundButton(answer)    {
     var style = "style=\"cursor: pointer; max-width: 60%;\""
-    var buttonHtml = "<img src=\"images/ui/button-hold.png\" onclick=\"setupGame()\" " + style + "></img>";
+    var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
 
 //compareMatches - returns if the player won or lost through matches
 function compareMatches(pvalue, dvalue)   {
     if(pvalue > dvalue) {
-        return 'YOU WON';
+        return 'YOU-WON';
     }
     else if(pvalue < dvalue)    {
-        return 'YOU LOSE';
+        return 'YOU-LOSE';
     }
     else    {
         return 'TIE';
@@ -73,10 +73,10 @@ function whoWon(pmatches, dmatches) {
     console.log(dmatches);
     //makes sure there is at least 1 match
     if(pmatches.length > 0 && dmatches.length == 0) {
-        return 'YOU WON';
+        return 'YOU-WON';
     }
     else if(pmatches.length == 0 && dmatches.length > 0)    {
-        return 'YOU LOSE';
+        return 'YOU-LOSE';
     }
     else if(pmatches.length == 0 && dmatches.length == 0)   {
         return 'TIE';
@@ -89,10 +89,10 @@ function whoWon(pmatches, dmatches) {
         if(result == 'TIE') {
             //makes sure there is at least 2 matches
             if(pmatches.length > 1 && dmatches.length == 1) {
-                return 'YOU WON';
+                return 'YOU-WON';
             }
             else if(pmatches.length == 1 && dmatches.length > 1)    {
-                return 'YOU LOSE';
+                return 'YOU-LOSE';
             }
             else if(pmatches.length == 1 && dmatches.length == 1)   {
                 return 'TIE';
@@ -167,11 +167,12 @@ function determineWinner()   {
     }
 
     //print winner
-    console.log(whoWon(pmatches, dmatches));
+    var answer = whoWon(pmatches, dmatches);
+    console.log(answer);
 
     //playersHand = [...pHandBackup];
     //dealersHand = [...dHandBackup];
-    newRoundButton();
+    newRoundButton(answer);
 }
 
 
