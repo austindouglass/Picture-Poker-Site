@@ -25,15 +25,25 @@ var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
-var result, deck, draw;
+var result, deck, draw, roundButton = false;
 
-//BUG: resizing window during newRoundButton breaks some things
-window.onresize = drawButton;
+window.onresize = resizingButton;
 
 setupGame();
 
+//resizingButton - when resizing window makes sure to display correct button
+function resizingButton()   {
+    if(!roundButton)    {
+        drawButton();
+    }
+    else{
+        newRoundButton(result);
+    }
+}
+
 //setupGame - core game components are ready for starting game
 function setupGame()    {
+    roundButton = false;
     draw = 0;
     deck = resetDeck();
     result = setHand(5, deck);
@@ -173,12 +183,13 @@ function determineWinner()   {
     }
 
     //print winner
-    var answer = whoWon(pmatches, dmatches);
-    console.log(answer);
+    result = whoWon(pmatches, dmatches);
+    console.log(result);
 
     //playersHand = [...pHandBackup];
     //dealersHand = [...dHandBackup];
-    newRoundButton(answer);
+    roundButton = true;
+    newRoundButton(result);
 }
 
 
