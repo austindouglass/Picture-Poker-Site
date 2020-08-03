@@ -17,7 +17,7 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: adding priority chart
+//current objective: add increase bet button
 
 var dealersHand = [];
 var dHandBackup = [];
@@ -26,6 +26,9 @@ var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw;
+
+//BUG: resizing window during newRoundButton breaks some things
+window.onresize = drawButton;
 
 setupGame();
 
@@ -49,6 +52,9 @@ function setupGame()    {
 //newRoundButton - clicking button starts new round
 function newRoundButton(answer)    {
     var style = "style=\"cursor: pointer; max-width: 60%;\""
+    if(window.innerWidth < 800) {
+        style = "style=\"cursor: pointer; max-width: 100%;\""
+    }
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
@@ -232,11 +238,26 @@ function newHand()  {
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
     var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%;\""
+    console.log(window.innerWidth);
+    if(!draw && window.innerWidth > 800)   {
+        style = "style=\"cursor: pointer; max-width: 60%; margin-left: 10%;\"";
+    }
+    else if(window.innerWidth < 800) {
+        style = "style=\"cursor: pointer; max-width: 100%;\""
+    }
     if(checkForSelection(playersHand, playersHand.length))  {
         buttonHtml  = "<img src=\"images/ui/button-draw.png\" onclick=\"newHand()\" " + style + "></img>";
     }
     else    {
         buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" " + style + "></img>";
+    }
+    if(!draw)   {
+        if(window.innerWidth < 800) {
+            style = "style=\"cursor: pointer; max-width: 40%;\"";
+        }
+        else
+            style = "style=\"cursor: pointer; max-width: 25%;\"";
+        buttonHtml += "<img src=\"images/ui/button-bet.png\" " + style + "></img>";
     }
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
