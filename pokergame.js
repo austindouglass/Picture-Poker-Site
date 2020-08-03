@@ -9,7 +9,7 @@ Reminder for things that will need to be done:
 -add cheat protection? (users can't easily read dealers card array)
     --not sure if this is worth doing as knowing the dealers cards do not guarantee any win
     --it really just helps prevents a big loss
--dont forget to clear hands and resetDeck after a round
+-add keyboard inputs?
 
 deck layout:
 card values will go from 1-6
@@ -17,13 +17,13 @@ deck will be 30 cards (5 cards per value)
 
 */
 
-//current objective: make setting and resetting game easier
+//current objective: adding priority chart
 
 var dealersHand = [];
 var dHandBackup = [];
 var playersHand = [];
 var pHandBackup = [];
-var numberToCard = {0 : 'back-mountain.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
+var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw;
 
@@ -224,7 +224,7 @@ function newHand()  {
     }
     //possibly remove these in place for an endRound function of some sort (getting rid of drawB and hold case setup)
     newDealerHand();
-    displayCards(dealersHand, "dealercards", numberToCard);
+    //displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
     drawButton();
 }

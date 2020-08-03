@@ -8,8 +8,15 @@
 	font-family: 'Montserrat', sans-serif;
 }
 
+
+
 body {
-    background-color: #255529;
+	background-color: #255529;
+	background-image: url('images/cards/priority.png');
+	background-repeat: no-repeat;
+	background-size: 13%;
+	background-position-x: 2%;
+	background-position-y: 60%;
     /* background-color: #1A1A1D; */
 	line-height: 30px;
 }
@@ -57,7 +64,7 @@ nav {
 .cards {
 	display: flex;
 	max-width: 12%;
-	z-index: 2;
+	z-index: 3;
 	margin-left: 20%;
 }
 
@@ -71,7 +78,16 @@ nav {
     z-index: 1;
 }
 
+.chart {
+	display: flex;
+	max-width: 10%;
+	z-index: 1;
+}
+
 @media only screen and (max-width: 800px) {
+	body {
+		background-image: none;
+	}
 	.nav-link {
 		font-size: 100%;
 	}
