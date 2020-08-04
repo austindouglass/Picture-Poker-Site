@@ -15,9 +15,16 @@ deck layout:
 card values will go from 1-6
 deck will be 30 cards (5 cards per value)
 
+colors:
+bet yellow: rgb(255, 228, 0)
+lose red: rgb(210, 43, 43)
+button gray: rgb(189, 189, 189)
+
 */
 
-//current objective: add increase bet button
+//current objective: add player money & working bet
+
+// localStorage['pm'] = '100';
 
 var dealersHand = [];
 var dHandBackup = [];
@@ -25,11 +32,24 @@ var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
-var result, deck, draw, roundButton = false;
+var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
 
 window.onresize = resizingButton;
 
 setupGame();
+
+function raiseBet() {    
+    ++betMultiplier;
+    displayCards(playersHand, "playercards", numberToCard);
+    drawButton();
+}
+
+function displayMoney()    {
+    var style = "<p style=\"text-align: center; color: rgb(255, 228, 0); font-size: 2em; -webkit-text-stroke: 1.5px black;\">";
+    var html = style + "BET: $" + pBet*betMultiplier + "</p>";
+    document.getElementById("playertext").innerHTML  = "Player:  $" + (pMoney);
+    document.getElementById("playerbet").innerHTML  = html;
+}
 
 //resizingButton - when resizing window makes sure to display correct button
 function resizingButton()   {
@@ -43,6 +63,11 @@ function resizingButton()   {
 
 //setupGame - core game components are ready for starting game
 function setupGame()    {
+    betMultiplier = 1;
+    if(pMoney < 10)
+        pBet = 1;
+    else
+        pBet = parseInt(pMoney/10);
     roundButton = false;
     draw = 0;
     deck = resetDeck();
@@ -61,10 +86,19 @@ function setupGame()    {
 
 //newRoundButton - clicking button starts new round
 function newRoundButton(answer)    {
-    var style = "style=\"cursor: pointer; max-width: 60%;\""
+    var style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
     if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
     }
+    if("YOU-WON" == answer) {
+        pMoney += pBet*(betMultiplier*2);
+    }
+    else if("YOU-LOSE" == answer)   {
+        pMoney -= pBet*betMultiplier;
+    }
+    localStorage['pm'] = pMoney.toString();
+    //displayMoney();
+    document.getElementById("playertext").innerHTML  = "Player:  $" + pMoney;
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
@@ -239,7 +273,6 @@ function newHand()  {
             deck.push(pHandBackup[i]);
         }
     }
-    //possibly remove these in place for an endRound function of some sort (getting rid of drawB and hold case setup)
     newDealerHand();
     //displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
@@ -248,10 +281,10 @@ function newHand()  {
 
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
-    var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%;\""
+    var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
     console.log(window.innerWidth);
-    if(!draw && window.innerWidth > 800)   {
-        style = "style=\"cursor: pointer; max-width: 60%; margin-left: 10%;\"";
+    if(!draw && betMultiplier < 5 && window.innerWidth > 800)   {
+        style = "style=\"cursor: pointer; max-width: 60%; margin-left: 14%;\"";
     }
     else if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
@@ -262,13 +295,13 @@ function drawButton()   {
     else    {
         buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" " + style + "></img>";
     }
-    if(!draw)   {
+    if(!draw && betMultiplier < 5)   {
         if(window.innerWidth < 800) {
             style = "style=\"cursor: pointer; max-width: 40%;\"";
         }
         else
             style = "style=\"cursor: pointer; max-width: 25%;\"";
-        buttonHtml += "<img src=\"images/ui/button-bet.png\" " + style + "></img>";
+        buttonHtml += "<img src=\"images/ui/button-bet.png\" onclick=\"raiseBet()\" " + style + "></img>";
     }
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
@@ -326,6 +359,9 @@ function displayCards(cards, id, numberToCard)    {
         else    {
             cardImgs += "></img>";
         }
+    }
+    if(id == "playercards") {
+        displayMoney();
     }
     document.getElementById(id).innerHTML = cardImgs;
 }

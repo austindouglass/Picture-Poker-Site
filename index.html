@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>Picture Poker Minigame</title>
-    <meta name="description" content="Picture Poker">
+    <title>Play Picture Poker</title>
+    <meta name="description" content=
+    "Play Picture Poker is a simplified poker game based off of a minigame on the DS. The player must beat the dealer
+    by having more matches with higher priority cards. With an addition of a bet system the game has some risk involved,
+    but the gameplay remains fun and addictive.">
     <meta name="author" content="Austin Douglass">
 
     <link rel="stylesheet" href="./pokergame.css" />
@@ -25,9 +28,9 @@
     <header>
         <nav>
             <ul class="nav-links">
-                <li><a class="nav-link" href="#pokergame.html">Shop</a></li>
-                <li><a class="nav-link" href="#projects">How To Play</a></li>
-                <li><a class="nav-link" href="#contact">About</a></li>
+                <li><a class="nav-link" href="shop.html">Shop</a></li>
+                <li><a class="nav-link" href="howtoplay.html">How To Play</a></li>
+                <li><a class="nav-link" href="about.html">About</a></li>
             </ul>
         </nav>
     </header>
@@ -50,9 +53,10 @@
             <div id="dealercards" class="cards"> test </div>
         </section>
         <section class='player' id='player' style='overflow:auto'>
-            Player:
+            <div id="playertext" class="ptext">Player:</div>
             <!-- <img src="images/michal-parzuchowski-pvIVPYGM16o-unsplash.jpg" class='dealerbackground'> -->
             <div id="playercards" class="cards"></div>
+            <div id="playerbet"></div>
             <div id="playerbutton"></div>
         </section>
         <script src="pokergame.js"></script>
