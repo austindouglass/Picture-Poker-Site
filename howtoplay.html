@@ -10,10 +10,15 @@
 
     <title>Play Picture Poker</title>
     <meta name="description" content=
-    "Play Picture Poker - how to play:>
+    "Play Picture Poker - how to play: 
+    Picture Poker is a simplified verison of poker. Both the player and dealer get 5
+    cards from the deck. Your objective is to get more matches than the dealer with the
+    highest priority cards.">
     <meta name="author" content="Austin Douglass">
 
     <link rel="stylesheet" href="./general.css" />
+
+    <link rel="icon" type="image/png" href="images/favicon.png" />
 
 </head>
 
@@ -22,6 +27,26 @@
       max-width: 100%;
       height: auto;
     }
+    body {
+        background-color: #255529;
+        line-height: 30px;
+
+        background-image: url('images/cards/priority.png');
+        background-repeat: no-repeat;
+        background-size: 13%;
+        background-position-x: 2%;
+        background-position-y: 4em;
+    }
+
+    @media only screen and (max-width: 800px) {
+	/* body {
+		background-image: none;
+    } */
+    .description {
+        font-size: 1.5em;
+        /* margin-left: 5%; */
+    }
+}
 </style>
 
 <body>
@@ -45,20 +70,18 @@
                 cards from the deck. Your objective is to get more matches than the dealer with the
                 highest priority cards. 
                 <br></br>
+                When the player and dealer get their cards they can choose to redraw certain cards
+                in their hand or hold. In most cases it is best for the player to redraw cards that
+                have no match or are low priority. The player can redraw a card by clicking it.
+                However, both the player and dealer only get one chance to redraw before comparing
+                cards and determining the winner.
+                <br></br>
                 It's important to remember that the number of matches you
                 have matters more than the priority of cards. For example, 3 x's beats 2 blue 
                 flames despite x's being the lowest priority card. When you have an equal number
                 of matches that is when priority cards come in to determine the winner. If the 
                 number of matches and priority of the card is equal we check for another match
                 and repeat the process. It is possible to get a tie.
-                <br></br>
-                When the player and dealer get their cards they can choose to redraw certain cards
-                in their hand or hold. In most cases it is best for the player to redraw cards that
-                have no match or are low priority. The player can redraw a card by clicking it.
-                However, both the player and dealer only get one chance to redraw before comparing
-                cards and determining the winner.
-
-
             </p>
         </div>
     </main>

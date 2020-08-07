@@ -16,11 +16,11 @@ body {
 	background-color: #255529;
 	line-height: 30px;
 
-	background-image: url('images/cards/priority.png');
+	/* background-image: url('images/cards/priority.png');
 	background-repeat: no-repeat;
 	background-size: 13%;
 	background-position-x: 2%;
-	background-position-y: 4em;
+	background-position-y: 4em; */
 }
 
 header {
