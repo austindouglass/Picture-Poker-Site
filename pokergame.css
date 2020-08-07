@@ -97,9 +97,9 @@ nav {
 	body {
 		background-image: none;
 	}
-	.nav-link {
+	/* .nav-link {
 		font-size: 100%;
-	}
+	} */
 	.cards {
 		max-width: 20%;
 		margin-left: 0%;
