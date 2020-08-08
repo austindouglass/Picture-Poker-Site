@@ -1,3 +1,6 @@
+
+//Copyright 2020, Austin Douglass, all rights reserved.
+
 /*
 Reminder for things that will need to be done:
 -selecting hold/draw

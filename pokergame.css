@@ -1,3 +1,5 @@
+/* Copyright 2020, Austin Douglass, all rights reserved. */
+
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap'); */
 
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap'); */
@@ -95,9 +97,9 @@ nav {
 	body {
 		background-image: none;
 	}
-	.nav-link {
+	/* .nav-link {
 		font-size: 100%;
-	}
+	} */
 	.cards {
 		max-width: 20%;
 		margin-left: 0%;

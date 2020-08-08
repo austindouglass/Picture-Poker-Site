@@ -1,3 +1,5 @@
+/* Copyright 2020, Austin Douglass, all rights reserved. */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,800;1,500&display=swap');
 
 * {
@@ -13,6 +15,12 @@
 body {
 	background-color: #255529;
 	line-height: 30px;
+
+	/* background-image: url('images/cards/priority.png');
+	background-repeat: no-repeat;
+	background-size: 13%;
+	background-position-x: 2%;
+	background-position-y: 4em; */
 }
 
 header {
@@ -48,4 +56,47 @@ nav {
 
 .nav-links a:hover {
     color: rgb(200, 200, 200);
+}
+
+.title	{
+	margin-top: 1%;
+	text-align: center;
+	font-size: 2.5em;
+	-webkit-text-stroke: 1.5px black;
+}
+
+.description {
+	font-size: 1.8em;
+	-webkit-text-stroke: 1px black;
+	/* background-color: gray; */
+	/* text-align: center; */
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 2%;
+}
+
+.link {
+	-webkit-text-stroke: 1px black;
+}
+
+.copyright {
+	font-size: 1.1em;
+	-webkit-text-stroke: 1px black;
+	margin-top: 20%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+@media only screen and (max-width: 800px) {
+	.title	{
+		margin-top: 2%;
+	}
+    .description {
+		font-size: 1.5em;
+		margin-top: 2.5%;
+	}
+	.copyright {
+		margin-top: 15%;
+		font-size: 1.1em;
+	}
 }
