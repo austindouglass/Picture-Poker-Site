@@ -75,6 +75,18 @@ nav {
 	margin-top: 2%;
 }
 
+.link {
+	-webkit-text-stroke: 1px black;
+}
+
+.copyright {
+	font-size: 1.1em;
+	-webkit-text-stroke: 1px black;
+	margin-top: 20%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
 @media only screen and (max-width: 800px) {
 	.title	{
 		margin-top: 2%;
@@ -82,5 +94,9 @@ nav {
     .description {
 		font-size: 1.5em;
 		margin-top: 2.5%;
+	}
+	.copyright {
+		margin-top: 15%;
+		font-size: 1.1em;
 	}
 }
