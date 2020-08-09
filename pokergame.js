@@ -3,12 +3,6 @@
 
 /*
 Reminder for things that will need to be done:
--selecting hold/draw
--selecting bet
--update for win
--update for lose
--update for draw
--display money / bet
 -add cheat protection? (users can't easily read dealers card array)
     --not sure if this is worth doing as knowing the dealers cards do not guarantee any win
     --it really just helps prevents a big loss
@@ -25,7 +19,7 @@ button gray: rgb(189, 189, 189)
 
 */
 
-//current objective: add player money & working bet
+//current objective: improve determineWinner performance
 
 // localStorage['pm'] = '100';
 
@@ -41,12 +35,14 @@ window.onresize = resizingButton;
 
 setupGame();
 
+//raiseBet - increments bet multiplier and redisplays money
 function raiseBet() {    
     ++betMultiplier;
     displayCards(playersHand, "playercards", numberToCard);
     drawButton();
 }
 
+//displayMoney - displays players money and bet amount
 function displayMoney()    {
     var style = "<p style=\"text-align: center; color: rgb(255, 228, 0); font-size: 2em; -webkit-text-stroke: 1.5px black;\">";
     var html = style + "BET: $" + pBet*betMultiplier + "</p>";
@@ -64,7 +60,7 @@ function resizingButton()   {
     }
 }
 
-//setupGame - core game components are ready for starting game
+//setupGame - sets core game components to be ready for starting game
 function setupGame()    {
     betMultiplier = 1;
     if(pMoney < 10)
@@ -163,11 +159,12 @@ function whoWon(pmatches, dmatches) {
 
 //determineWinner - checks matches for both hands and returns player game result
 function determineWinner()   {
-    //makes sure cant draw cards after hold
+    //player cannot draw cards after hold
     ++draw;
     if(draw == 1)   {
         newDealerHand();
     }
+    //sort for easier to see matches after round
     dealersHand.sort();
     playersHand.sort();
     dHandBackup = [...dealersHand];
@@ -177,9 +174,15 @@ function determineWinner()   {
 
     var i, j, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
 
+    //finds all matches for player and dealer
     for(i=0; i<dealersHand.length; ++i) {
+        //any card part of a match is set to -1
         if(dealersHand[i] != -1 || playersHand[i] != -1)    {
             for(j=i+1; j<dealersHand.length; ++j)    {
+                //if both dealer and player dont have a match we end loop early since array is sorted
+                if(dealersHand[i] != dealersHand[j] && playersHand[i] != playersHand[j])    {
+                    break;
+                }
                 if(dealersHand[i] != -1 && dealersHand[i] == dealersHand[j])    {
                     dealersHand[j] = -1;
                     ++dmatch;
@@ -190,6 +193,7 @@ function determineWinner()   {
                 }
             }
             
+            //store matches with highest priority match first
             if(dmatch > 1)  {
                 if(!dmatches.length || dmatch > dmatches[0][0] || 
                     (dmatch == dmatches[0][0] && dealersHand[i] > dmatches[0][1]))    {
@@ -285,7 +289,6 @@ function newHand()  {
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
     var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
-    console.log(window.innerWidth);
     if(!draw && betMultiplier < 5 && window.innerWidth > 800)   {
         style = "style=\"cursor: pointer; max-width: 60%; margin-left: 14%;\"";
     }
