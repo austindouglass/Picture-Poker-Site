@@ -19,7 +19,7 @@ button gray: rgb(189, 189, 189)
 
 */
 
-//current objective: improve determineWinner performance
+//current objective: improved determineWinner and newDealerHand performance from O(N^2) to O(N)
 
 // localStorage['pm'] = '100';
 
@@ -27,7 +27,7 @@ var dealersHand = [];
 var dHandBackup = [];
 var playersHand = [];
 var pHandBackup = [];
-var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'club.png', 3 : 'spade.png', 
+var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
 
@@ -118,8 +118,8 @@ function compareMatches(pvalue, dvalue)   {
 //whoWon - returns the player result by comparing matches
 function whoWon(pmatches, dmatches) {
     console.log('----whoWon----');
-    console.log(pmatches);
     console.log(dmatches);
+    console.log(pmatches);
     //makes sure there is at least 1 match
     if(pmatches.length > 0 && dmatches.length == 0) {
         return 'YOU-WON';
@@ -167,34 +167,18 @@ function determineWinner()   {
     //sort for easier to see matches after round
     dealersHand.sort();
     playersHand.sort();
-    dHandBackup = [...dealersHand];
-    pHandBackup = [...playersHand];
     displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
 
-    var i, j, pmatch = 1, dmatch = 1, dmatches = [], pmatches = [];
+    var i, pmatch, dmatch, dmatches = [], pmatches = [], playerDict = {}, dealerDict = {};
 
     //finds all matches for player and dealer
     for(i=0; i<dealersHand.length; ++i) {
-        //any card part of a match is set to -1
-        if(dealersHand[i] != -1 || playersHand[i] != -1)    {
-            for(j=i+1; j<dealersHand.length; ++j)    {
-                //if both dealer and player dont have a match we end loop early since array is sorted
-                if(dealersHand[i] != dealersHand[j] && playersHand[i] != playersHand[j])    {
-                    break;
-                }
-                if(dealersHand[i] != -1 && dealersHand[i] == dealersHand[j])    {
-                    dealersHand[j] = -1;
-                    ++dmatch;
-                }
-                if(playersHand[i] != -1 && playersHand[i] == playersHand[j])    {
-                    playersHand[j] = -1;
-                    ++pmatch;
-                }
-            }
-            
-            //store matches with highest priority match first
-            if(dmatch > 1)  {
+        if(dealersHand[i] in dealerDict)    {
+            ++dealerDict[dealersHand[i]];
+            dmatch = dealerDict[dealersHand[i]];
+            //if reaching end of dealer hand or there are no more matches for this card
+            if(i+1 >= dealersHand.length || dealersHand[i] != dealersHand[i+1]) {
                 if(!dmatches.length || dmatch > dmatches[0][0] || 
                     (dmatch == dmatches[0][0] && dealersHand[i] > dmatches[0][1]))    {
                     dmatches.unshift([dmatch, dealersHand[i]]);
@@ -203,7 +187,16 @@ function determineWinner()   {
                     dmatches.push([dmatch, dealersHand[i]]);
                 }
             }
-            if(pmatch > 1)  {
+        }
+        else    {
+            dealerDict[dealersHand[i]] = 1;
+        }
+
+        if(playersHand[i] in playerDict)    {
+            ++playerDict[playersHand[i]];
+            //if reaching end of player hand or there are no more matches for this card
+            if(i+1 >= playersHand.length || playersHand[i] != playersHand[i+1]) {
+                pmatch = playerDict[playersHand[i]];
                 if(!pmatches.length || pmatch > pmatches[0][0] ||
                     (pmatch == pmatches[0][0] && playersHand[i] > pmatches[0][1]))    {
                     pmatches.unshift([pmatch, playersHand[i]]);
@@ -212,14 +205,9 @@ function determineWinner()   {
                     pmatches.push([pmatch, playersHand[i]]);
                 }
             }
-
-            if(dmatch)
-                dealersHand[i] = -1;
-            if(pmatch)
-                playersHand[i] = -1;
-            
-            dmatch = 1;
-            pmatch = 1;
+        }
+        else    {
+            playerDict[playersHand[i]] = 1;
         }
     }
 
@@ -227,8 +215,6 @@ function determineWinner()   {
     result = whoWon(pmatches, dmatches);
     console.log(result);
 
-    //playersHand = [...pHandBackup];
-    //dealersHand = [...dHandBackup];
     roundButton = true;
     newRoundButton(result);
 }
@@ -237,28 +223,24 @@ function determineWinner()   {
 //newDealerHand - checks for non matches and redraws those cards
 function newDealerHand()    {
     dHandBackup = [...dealersHand];
-    var i, j, draw, matches = 0;
+    var i, draw, card, dealerDict = {};
 
-    //card selection algorithm O(n^2) (but n should always be 5 in our game)
+    //card selection algorithm O(N)
     for(i=0; i<dealersHand.length; ++i) {
-        if(dealersHand[i] != -1)   {         //-1 signals that there is a match in this spot
-            for(j=i+1; j<dealersHand.length; ++j)    {
-                if(dealersHand[i] == dealersHand[j])    {
-                    dealersHand[j] = -1;
-                    ++matches;
-                }
-            }
-            if(matches)
-                dealersHand[i] = -1;
+        card = dealersHand[i];
+        if(card in dealerDict && dealersHand[dealerDict[card]] == -1)    {
+            //if there is a match undo card select for redraw
+            dealersHand[dealerDict[card]] = dHandBackup[dealerDict[card]];
         }
-        matches = 0;
+        else{
+            dealerDict[card] = i;   //remember card index in case there is a match
+            dealersHand[i] = -1;    //-1 = select to redraw
+        }
     }
 
     //drawing new cards
     for(i=0; i<dealersHand.length; ++i)    {
-        if(dealersHand[i] == -1)    
-            dealersHand[i] = dHandBackup[i];
-        else    {
+        if(dealersHand[i] == -1)    {
             draw = Math.floor(Math.random()*deck.length);
             dealersHand[i] = deck[draw];
             deck.splice(draw, 1);
