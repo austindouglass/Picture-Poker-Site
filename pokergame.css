@@ -71,6 +71,7 @@ nav {
 .cards {
 	display: flex;
 	max-width: 12%;
+	max-height: 12%;
 	z-index: 3;
 	margin-left: 20%;
 }
@@ -90,6 +91,7 @@ nav {
 .chart {
 	display: flex;
 	max-width: 10%;
+	max-height: 10%;
 	z-index: 1;
 }
 
@@ -102,6 +104,7 @@ nav {
 	} */
 	.cards {
 		max-width: 20%;
+		max-height: 20%;
 		margin-left: 0%;
 	}
 }
