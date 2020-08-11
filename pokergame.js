@@ -19,7 +19,7 @@ button gray: rgb(189, 189, 189)
 
 */
 
-//current objective: improved determineWinner and newDealerHand performance from O(N^2) to O(N)
+//current objective: fix bug where images on iphone are strectched
 
 // localStorage['pm'] = '100';
 
