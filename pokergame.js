@@ -30,6 +30,7 @@ var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
+var deckStyle = "numbers/";
 
 window.onresize = resizingButton;
 
@@ -338,8 +339,8 @@ function flipCard(flipNum) {
 function displayCards(cards, id, numberToCard)    {
     var i, cardImgs = "", cardType;
     for(i=0; i<cards.length; ++i)   {
-        cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\"";
+        cardType = "numbers/" + numberToCard[cards[i]];
+        cardImgs += "<img src=\"images/decks/" + cardType + "\"";
         if(id == "playercards" && draw == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
