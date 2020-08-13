@@ -3,9 +3,7 @@
 
 /*
 Reminder for things that will need to be done:
--add cheat protection? (users can't easily read dealers card array)
-    --not sure if this is worth doing as knowing the dealers cards do not guarantee any win
-    --it really just helps prevents a big loss
+-shop
 -add keyboard inputs?
 
 deck layout:
@@ -19,9 +17,9 @@ button gray: rgb(189, 189, 189)
 
 */
 
-//current objective: fix bug where images on iphone are strectched
+//localStorage['pm'] = '100';
 
-// localStorage['pm'] = '100';
+//current objective: work on shop and new decks
 
 var dealersHand = [];
 var dHandBackup = [];
@@ -30,10 +28,24 @@ var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
+var deckStyle = localStorage['dstyle'] || "default/";
 
-window.onresize = resizingButton;
+$('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
+
+window.onresize = resizingUI;
 
 setupGame();
+
+//adjustMoney - changes players money depending on round result and bet
+function adjustMoney(answer)  {    
+    if("YOU-WON" == answer) {
+        pMoney += pBet*(betMultiplier*2);
+    }
+    else if("YOU-LOSE" == answer)   {
+        pMoney -= pBet*betMultiplier;
+    }
+    localStorage['pm'] = pMoney.toString();
+}
 
 //raiseBet - increments bet multiplier and redisplays money
 function raiseBet() {    
@@ -50,13 +62,19 @@ function displayMoney()    {
     document.getElementById("playerbet").innerHTML  = html;
 }
 
-//resizingButton - when resizing window makes sure to display correct button
-function resizingButton()   {
+//resizingUI - when resizing window makes sure to display correct ui elements
+function resizingUI()   {
     if(!roundButton)    {
         drawButton();
     }
     else{
         newRoundButton(result);
+    }
+    if(window.innerWidth >= 800)    {
+        $('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
+    }
+    else{
+        $('body').css("background-image", "none");
     }
 }
 
@@ -89,14 +107,6 @@ function newRoundButton(answer)    {
     if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
     }
-    if("YOU-WON" == answer) {
-        pMoney += pBet*(betMultiplier*2);
-    }
-    else if("YOU-LOSE" == answer)   {
-        pMoney -= pBet*betMultiplier;
-    }
-    localStorage['pm'] = pMoney.toString();
-    //displayMoney();
     document.getElementById("playertext").innerHTML  = "Player:  $" + pMoney;
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
@@ -211,9 +221,10 @@ function determineWinner()   {
         }
     }
 
-    //print winner
     result = whoWon(pmatches, dmatches);
     console.log(result);
+
+    adjustMoney(result);
 
     roundButton = true;
     newRoundButton(result);
@@ -338,8 +349,8 @@ function flipCard(flipNum) {
 function displayCards(cards, id, numberToCard)    {
     var i, cardImgs = "", cardType;
     for(i=0; i<cards.length; ++i)   {
-        cardType = numberToCard[cards[i]];
-        cardImgs += "<img src=\"images/cards/" + cardType + "\"";
+        cardType = deckStyle + numberToCard[cards[i]];
+        cardImgs += "<img src=\"images/decks/" + cardType + "\"";
         if(id == "playercards" && draw == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
