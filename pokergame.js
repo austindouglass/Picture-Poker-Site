@@ -36,6 +36,17 @@ window.onresize = resizingUI;
 
 setupGame();
 
+//adjustMoney - changes players money depending on round result and bet
+function adjustMoney(answer)  {    
+    if("YOU-WON" == answer) {
+        pMoney += pBet*(betMultiplier*2);
+    }
+    else if("YOU-LOSE" == answer)   {
+        pMoney -= pBet*betMultiplier;
+    }
+    localStorage['pm'] = pMoney.toString();
+}
+
 //raiseBet - increments bet multiplier and redisplays money
 function raiseBet() {    
     ++betMultiplier;
@@ -96,14 +107,6 @@ function newRoundButton(answer)    {
     if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
     }
-    if("YOU-WON" == answer) {
-        pMoney += pBet*(betMultiplier*2);
-    }
-    else if("YOU-LOSE" == answer)   {
-        pMoney -= pBet*betMultiplier;
-    }
-    localStorage['pm'] = pMoney.toString();
-    //displayMoney();
     document.getElementById("playertext").innerHTML  = "Player:  $" + pMoney;
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
@@ -218,9 +221,10 @@ function determineWinner()   {
         }
     }
 
-    //print winner
     result = whoWon(pmatches, dmatches);
     console.log(result);
+
+    adjustMoney(result);
 
     roundButton = true;
     newRoundButton(result);
