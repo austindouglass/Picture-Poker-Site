@@ -28,9 +28,10 @@ var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
 var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
-var deckStyle = localStorage['dstyle'] || "default/";
+var deckStyle = localStorage['dstyle'] || "default";
+deckStyle += "/";
 
-$('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
+resizingUI();
 
 window.onresize = resizingUI;
 
