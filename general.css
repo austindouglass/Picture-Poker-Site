@@ -15,22 +15,14 @@
 body {
 	background-color: #255529;
 	line-height: 30px;
-
-	/* background-image: url('images/cards/priority.png');
-	background-repeat: no-repeat;
-	background-size: 13%;
-	background-position-x: 2%;
-	background-position-y: 4em; */
 }
 
 header {
 	display: flex;
-	/*width: 90%;*/
 	height: 5vh;
 	margin: auto;
 	align-items: center;
 	background-color: #a14040;
-	/* position: sticky; */
     top: 0;
     z-index: 3;
 }
@@ -68,8 +60,6 @@ nav {
 .description {
 	font-size: 1.8em;
 	-webkit-text-stroke: 1px black;
-	/* background-color: gray; */
-	/* text-align: center; */
 	margin-left: 5%;
 	margin-right: 5%;
 	margin-top: 2%;
@@ -87,6 +77,21 @@ nav {
 	margin-right: 5%;
 }
 
+.shoptext {
+	font-size: 1.8em;
+	-webkit-text-stroke: 1px black;
+	text-decoration: underline;
+	text-decoration-color: white;
+	margin-left: 2%;
+}
+
+.decks {
+	display: flex;
+	max-width: 15%;
+	max-height: 15%;
+	margin-left: 1%;
+}
+
 @media only screen and (max-width: 800px) {
 	.title	{
 		margin-top: 2%;
@@ -98,5 +103,9 @@ nav {
 	.copyright {
 		margin-top: 15%;
 		font-size: 1.1em;
+	}
+	.decks {
+		max-width: 30%;
+		max-height: 30%;
 	}
 }
