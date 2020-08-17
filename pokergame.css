@@ -22,7 +22,7 @@ body {
 	background-repeat: no-repeat;
 	background-size: 13%;
 	background-position-x: 2%;
-	background-position-y: 60%;
+	background-position-y: 40%;
     /* background-color: #1A1A1D; */
 	line-height: 30px;
 }
@@ -98,6 +98,12 @@ nav {
 @media only screen and (max-width: 800px) {
 	body {
 		background-image: none;
+	}
+	#bottomchart	{
+		max-width: 25%;
+		max-height: 25%;
+		margin-top: -20%;
+		margin-left: 60%;
 	}
 	/* .nav-link {
 		font-size: 100%;

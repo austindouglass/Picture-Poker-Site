@@ -72,10 +72,12 @@ function resizingUI()   {
         newRoundButton(result);
     }
     if(window.innerWidth >= 800)    {
+        document.getElementById("bottomchart").innerHTML = "";
         $('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
     }
     else{
         $('body').css("background-image", "none");
+        document.getElementById("bottomchart").innerHTML = "<img src='images/decks/" + deckStyle + "priority.png'></img>";
     }
 }
 
