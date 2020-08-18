@@ -1,13 +1,12 @@
 
 //Copyright 2020, Austin Douglass, all rights reserved.
 
-//remember to store purchased decks!
+if(localStorage['dOwned'] == null) {
+    localStorage["dOwned"] = "default";
+}
 
-var decksOwned = ["default"], currentDeck = localStorage['dstyle'] || "default";
-var pMoney = 2500000; //parseInt(localStorage['pm']) || 0;
-//every deck in the game (except default)
-// var allDecks = ["numbers", "quarantine", "dog", "animals", "detective", "egypt", "retro",
-//                 "aliens", "hiphop", "winner"];
+var decksOwned = localStorage['dOwned'].split(","), currentDeck = localStorage['dstyle'] || "default";
+var pMoney = parseInt(localStorage['pm']) || 0;
 var deckCost = {"numbers" : 100, "quarantine" : 1000, "dog" : 10000,
                 "animals" : 25000, "detective" : 50000, "egypt" : 75000,  "retro" : 100000, 
                 "aliens" : 250000, "hiphop" : 500000, "winner" : 1000000};
@@ -15,12 +14,18 @@ var allDecks = Object.keys(deckCost);
 
 
 document.getElementById("playermoney").innerHTML = "Your Money: $" + pMoney.toString();
+removeDecks();
 displayShop();
 displayPlayerDecks();
 
 //removes decks that have previously been purchased
 function removeDecks () {
-    
+    var i;
+    for(i = 0; i < decksOwned.length; ++i)    {
+        if(allDecks.includes(decksOwned[i])) {
+            allDecks.splice(allDecks.indexOf(decksOwned[i]), 1);
+        }
+    }
 }
 
 //player clicked to buy a deck
@@ -30,8 +35,9 @@ function buyDeck(newDeck)    {
         return;
     }
     pMoney -= deckCost[newDeck];
-    //localStorage['pm'] = pMoney.toString();
+    localStorage['pm'] = pMoney.toString();
     document.getElementById("playermoney").innerHTML = "Your Money: $" + pMoney.toString();
+    localStorage['dOwned'] += "," + newDeck;
     decksOwned.push(newDeck);
     displayShop();
     displayPlayerDecks();
@@ -71,7 +77,5 @@ function displayPlayerDecks()   {
             html += "<div class='decks'><img src=\"images/decks/shop/" + decksOwned[i] + "-in-use.png\"></img></div>";
         }
     }
-    //console.log(html);
     document.getElementById("playerdecks").innerHTML = html;
 }
-

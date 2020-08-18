@@ -95,19 +95,20 @@ nav {
 	z-index: 1;
 }
 
+
 @media only screen and (max-width: 800px) {
 	body {
 		background-image: none;
 	}
+	/* .nav-link {
+		font-size: 100%;
+	} */
 	#bottomchart	{
 		max-width: 25%;
 		max-height: 25%;
 		margin-top: -20%;
 		margin-left: 60%;
 	}
-	/* .nav-link {
-		font-size: 100%;
-	} */
 	.cards {
 		max-width: 20%;
 		max-height: 20%;

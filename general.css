@@ -78,12 +78,12 @@ nav {
 }
 
 .shoptext {
-	margin-top: 1%;
+	/* margin-top: 1%; */
 	font-size: 1.8em;
 	-webkit-text-stroke: 1px black;
-	text-decoration: underline;
-	text-decoration-color: white;
-	margin-left: 2%;
+	/* text-decoration: underline;
+	text-decoration-color: white; */
+	margin-left: 3%;
 }
 
 #dailyshop {
@@ -104,6 +104,12 @@ nav {
 	margin-left: 1%;
 }
 
+.shoplogo {
+	max-width: 20%;
+	max-height: 20%;
+	margin-left: 1%;
+}
+
 @media only screen and (max-width: 800px) {
 	.title	{
 		margin-top: 2%;
@@ -119,5 +125,9 @@ nav {
 	.decks {
 		max-width: 30%;
 		max-height: 30%;
+	}
+	.shoplogo {
+		max-width: 40%;
+		max-height: 40%;
 	}
 }

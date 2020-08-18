@@ -27,11 +27,9 @@ var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
-var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
+var result, deck, drawCheck, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
 var deckStyle = localStorage['dstyle'] || "default";
 deckStyle += "/";
-
-resizingUI();
 
 window.onresize = resizingUI;
 
@@ -53,6 +51,7 @@ function raiseBet() {
     ++betMultiplier;
     displayCards(playersHand, "playercards", numberToCard);
     drawButton();
+    resizingUI();
 }
 
 //displayMoney - displays players money and bet amount
@@ -74,10 +73,18 @@ function resizingUI()   {
     if(window.innerWidth >= 800)    {
         document.getElementById("bottomchart").innerHTML = "";
         $('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
+        $('#bottomchart').css('margin-top', '0%');
     }
     else{
         $('body').css("background-image", "none");
+        if(drawCheck || betMultiplier > 4)  {
+            $('#bottomchart').css('margin-top', '0%');
+        }
+        else{
+            $('#bottomchart').css('margin-top', '-20%');
+        }
         document.getElementById("bottomchart").innerHTML = "<img src='images/decks/" + deckStyle + "priority.png'></img>";
+        //if player draws or holds adjust chart for raise bet button removal
     }
 }
 
@@ -89,7 +96,8 @@ function setupGame()    {
     else
         pBet = parseInt(pMoney/10);
     roundButton = false;
-    draw = 0;
+    //drawCheck has three stages: 0 no draws, 1 dealer draws, 2 dealer and player draws
+    drawCheck = 0;
     deck = resetDeck();
     result = setHand(5, deck);
     dealersHand = result[0];
@@ -101,6 +109,7 @@ function setupGame()    {
 
     displayCards([0,0,0,0,0], "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
+    resizingUI();
     drawButton();
 }
 
@@ -173,8 +182,8 @@ function whoWon(pmatches, dmatches) {
 //determineWinner - checks matches for both hands and returns player game result
 function determineWinner()   {
     //player cannot draw cards after hold
-    ++draw;
-    if(draw == 1)   {
+    ++drawCheck;
+    if(drawCheck == 1)   {
         newDealerHand();
     }
     //sort for easier to see matches after round
@@ -261,13 +270,14 @@ function newDealerHand()    {
             deck.push(dHandBackup[i]);
         }
     }
+    resizingUI();
 }
 
 
 //newHand - replaces players selected cards when clicking draw button
 function newHand()  {
-    ++draw;
-    var i;
+    drawCheck = 1;
+    var i, draw;
     for(i = 0; i < playersHand.length; ++i)  {
         if(playersHand[i] == 0) {
             draw = Math.floor(Math.random()*deck.length);
@@ -279,13 +289,14 @@ function newHand()  {
     newDealerHand();
     //displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
+    resizingUI();
     drawButton();
 }
 
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
     var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
-    if(!draw && betMultiplier < 5 && window.innerWidth > 800)   {
+    if(!drawCheck && betMultiplier < 5 && window.innerWidth > 800)   {
         style = "style=\"cursor: pointer; max-width: 60%; margin-left: 14%;\"";
     }
     else if(window.innerWidth < 800) {
@@ -297,7 +308,7 @@ function drawButton()   {
     else    {
         buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" " + style + "></img>";
     }
-    if(!draw && betMultiplier < 5)   {
+    if(!drawCheck && betMultiplier < 5)   {
         if(window.innerWidth < 800) {
             style = "style=\"cursor: pointer; max-width: 40%;\"";
         }
@@ -354,7 +365,7 @@ function displayCards(cards, id, numberToCard)    {
     for(i=0; i<cards.length; ++i)   {
         cardType = deckStyle + numberToCard[cards[i]];
         cardImgs += "<img src=\"images/decks/" + cardType + "\"";
-        if(id == "playercards" && draw == 0) {
+        if(id == "playercards" && drawCheck == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
         }
