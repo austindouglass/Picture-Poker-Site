@@ -22,7 +22,7 @@ body {
 	background-repeat: no-repeat;
 	background-size: 13%;
 	background-position-x: 2%;
-	background-position-y: 60%;
+	background-position-y: 40%;
     /* background-color: #1A1A1D; */
 	line-height: 30px;
 }
@@ -95,6 +95,7 @@ nav {
 	z-index: 1;
 }
 
+
 @media only screen and (max-width: 800px) {
 	body {
 		background-image: none;
@@ -102,9 +103,24 @@ nav {
 	/* .nav-link {
 		font-size: 100%;
 	} */
+	#bottomchart	{
+		max-width: 25%;
+		max-height: 25%;
+		margin-top: -20%;
+		margin-left: 60%;
+	}
 	.cards {
 		max-width: 20%;
 		max-height: 20%;
 		margin-left: 0%;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.nav-link	{
+		font-size: 18px;
+	}
+	.ptext	{
+		font-size: 22px;
 	}
 }

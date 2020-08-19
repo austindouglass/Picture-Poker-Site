@@ -15,22 +15,14 @@
 body {
 	background-color: #255529;
 	line-height: 30px;
-
-	/* background-image: url('images/cards/priority.png');
-	background-repeat: no-repeat;
-	background-size: 13%;
-	background-position-x: 2%;
-	background-position-y: 4em; */
 }
 
 header {
 	display: flex;
-	/*width: 90%;*/
 	height: 5vh;
 	margin: auto;
 	align-items: center;
 	background-color: #a14040;
-	/* position: sticky; */
     top: 0;
     z-index: 3;
 }
@@ -68,8 +60,6 @@ nav {
 .description {
 	font-size: 1.8em;
 	-webkit-text-stroke: 1px black;
-	/* background-color: gray; */
-	/* text-align: center; */
 	margin-left: 5%;
 	margin-right: 5%;
 	margin-top: 2%;
@@ -82,9 +72,42 @@ nav {
 .copyright {
 	font-size: 1.1em;
 	-webkit-text-stroke: 1px black;
-	margin-top: 20%;
+	margin-top: 10%;
 	margin-left: 5%;
 	margin-right: 5%;
+}
+
+.shoptext {
+	/* margin-top: 1%; */
+	font-size: 1.8em;
+	-webkit-text-stroke: 1px black;
+	/* text-decoration: underline;
+	text-decoration-color: white; */
+	margin-left: 3%;
+}
+
+#dailyshop {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+#playerdecks {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+.decks {
+	max-width: 15%;
+	max-height: 15%;
+	margin-left: 1%;
+}
+
+.shoplogo {
+	max-width: 20%;
+	max-height: 20%;
+	margin-left: 1%;
 }
 
 @media only screen and (max-width: 800px) {
@@ -96,7 +119,30 @@ nav {
 		margin-top: 2.5%;
 	}
 	.copyright {
-		margin-top: 15%;
+		margin-top: 10%;
 		font-size: 1.1em;
+	}
+	.decks {
+		max-width: 30%;
+		max-height: 30%;
+	}
+	.shoplogo {
+		max-width: 40%;
+		max-height: 40%;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.nav-link	{
+		font-size: 18px;
+	}
+	.title	{
+		font-size: 28px
+	}
+	.description	{
+		font-size: 18px;
+	}
+	.shoptext	{
+		font-size: 22px;
 	}
 }

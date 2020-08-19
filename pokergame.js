@@ -16,7 +16,6 @@ lose red: rgb(210, 43, 43)
 button gray: rgb(189, 189, 189)
 
 */
-
 //localStorage['pm'] = '100';
 
 //current objective: work on shop and new decks
@@ -27,15 +26,54 @@ var playersHand = [];
 var pHandBackup = [];
 var numberToCard = {0 : 'back.png', 1 : 'cross.png', 2 : 'spade.png', 3 : 'club.png', 
                     4 : 'heart.png', 5 : 'diamond.png', 6 : 'flame.png'};
-var result, deck, draw, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
+var result, deck, drawCheck, roundButton = false, pMoney = parseInt(localStorage['pm']) || 100, pBet, betMultiplier = 1;
 var deckStyle = localStorage['dstyle'] || "default";
 deckStyle += "/";
-
-resizingUI();
 
 window.onresize = resizingUI;
 
 setupGame();
+
+//setupCards - either gets cards from storage or setups new cards
+function setupCards()   {
+    if(localStorage['gcards'] == null || JSON.parse(localStorage['gcards']) == null)  {        
+        deck = resetDeck();
+        result = setHand(5, deck);
+        dealersHand = result[0];
+        deck = result[1];
+
+        result = setHand(5, deck);
+        playersHand = result[0];
+        deck = result[1];
+        const data = {
+            dh: dealersHand.toString(),
+            ph: playersHand.toString(),
+            d:  deck.toString()
+        };
+        localStorage['gcards'] = JSON.stringify(data);
+    }
+    else   {
+        const data = JSON.parse(localStorage['gcards']);
+        dealersHand = data.dh.split(",");
+        playersHand = data.ph.split(',');
+        deck        = data.d.split(',');
+    }
+}
+
+//addCommas - adds commas to a string of numbers
+function addCommas(money)   {
+    if(money.length < 4)
+        return money;
+    var i, counter = 0;
+    for(i = money.length-1; i >= 0; --i) {
+        ++counter;
+        if(counter-1 == 3)  {
+            money = money.slice(0, i+1) + "," + money.slice(i+1);
+            counter = 1;
+        }
+    }
+    return money;
+}
 
 //adjustMoney - changes players money depending on round result and bet
 function adjustMoney(answer)  {    
@@ -44,8 +82,12 @@ function adjustMoney(answer)  {
     }
     else if("YOU-LOSE" == answer)   {
         pMoney -= pBet*betMultiplier;
+        if(pMoney < 0)  {
+            pMoney = 0;
+        }
     }
     localStorage['pm'] = pMoney.toString();
+    localStorage['gcards'] = null;
 }
 
 //raiseBet - increments bet multiplier and redisplays money
@@ -53,13 +95,14 @@ function raiseBet() {
     ++betMultiplier;
     displayCards(playersHand, "playercards", numberToCard);
     drawButton();
+    resizingUI();
 }
 
 //displayMoney - displays players money and bet amount
 function displayMoney()    {
     var style = "<p style=\"text-align: center; color: rgb(255, 228, 0); font-size: 2em; -webkit-text-stroke: 1.5px black;\">";
-    var html = style + "BET: $" + pBet*betMultiplier + "</p>";
-    document.getElementById("playertext").innerHTML  = "Player:  $" + (pMoney);
+    var html = style + "BET: $" + addCommas((pBet*betMultiplier).toString()) + "</p>";
+    document.getElementById("playertext").innerHTML  = "Player:  $" + addCommas(pMoney.toString());
     document.getElementById("playerbet").innerHTML  = html;
 }
 
@@ -72,43 +115,48 @@ function resizingUI()   {
         newRoundButton(result);
     }
     if(window.innerWidth >= 800)    {
+        document.getElementById("bottomchart").innerHTML = "";
         $('body').css("background-image", "url('images/decks/" + deckStyle + "priority.png')");
+        $('#bottomchart').css('margin-top', '0%');
     }
     else{
         $('body').css("background-image", "none");
+        if(drawCheck || betMultiplier > 4)  {
+            $('#bottomchart').css('margin-top', '0%');
+        }
+        else{
+            $('#bottomchart').css('margin-top', '-20%');
+        }
+        document.getElementById("bottomchart").innerHTML = "<img src='images/decks/" + deckStyle + "priority.png'></img>";
+        //if player draws or holds adjust chart for raise bet button removal
     }
 }
 
 //setupGame - sets core game components to be ready for starting game
 function setupGame()    {
-    betMultiplier = 1;
     if(pMoney < 10)
         pBet = 1;
     else
         pBet = parseInt(pMoney/10);
+    betMultiplier = 1;
     roundButton = false;
-    draw = 0;
-    deck = resetDeck();
-    result = setHand(5, deck);
-    dealersHand = result[0];
-    deck = result[1];
-
-    result = setHand(5, deck);
-    playersHand = result[0];
-    deck = result[1];
+    //drawCheck has three stages: 0 no draws, 1 dealer draws, 2 dealer and player draws
+    drawCheck = 0;
+    setupCards();
 
     displayCards([0,0,0,0,0], "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
+    resizingUI();
     drawButton();
 }
 
-//newRoundButton - clicking button starts new round
+//newRoundButton - clicking results button starts new round also updates money
 function newRoundButton(answer)    {
     var style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
     if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
     }
-    document.getElementById("playertext").innerHTML  = "Player:  $" + pMoney;
+    document.getElementById("playertext").innerHTML  = "Player:  $" + addCommas(pMoney.toString());
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
@@ -171,8 +219,8 @@ function whoWon(pmatches, dmatches) {
 //determineWinner - checks matches for both hands and returns player game result
 function determineWinner()   {
     //player cannot draw cards after hold
-    ++draw;
-    if(draw == 1)   {
+    ++drawCheck;
+    if(drawCheck == 1)   {
         newDealerHand();
     }
     //sort for easier to see matches after round
@@ -259,13 +307,14 @@ function newDealerHand()    {
             deck.push(dHandBackup[i]);
         }
     }
+    resizingUI();
 }
 
 
 //newHand - replaces players selected cards when clicking draw button
 function newHand()  {
-    ++draw;
-    var i;
+    drawCheck = 1;
+    var i, draw;
     for(i = 0; i < playersHand.length; ++i)  {
         if(playersHand[i] == 0) {
             draw = Math.floor(Math.random()*deck.length);
@@ -277,13 +326,14 @@ function newHand()  {
     newDealerHand();
     //displayCards(dealersHand, "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
+    resizingUI();
     drawButton();
 }
 
 //drawButton - displays clickable button to hold / draw for player
 function drawButton()   {
     var buttonHtml, style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
-    if(!draw && betMultiplier < 5 && window.innerWidth > 800)   {
+    if(!drawCheck && betMultiplier < 5 && window.innerWidth > 800)   {
         style = "style=\"cursor: pointer; max-width: 60%; margin-left: 14%;\"";
     }
     else if(window.innerWidth < 800) {
@@ -295,7 +345,7 @@ function drawButton()   {
     else    {
         buttonHtml  = "<img src=\"images/ui/button-hold.png\" onclick=\"determineWinner()\" " + style + "></img>";
     }
-    if(!draw && betMultiplier < 5)   {
+    if(!drawCheck && betMultiplier < 5)   {
         if(window.innerWidth < 800) {
             style = "style=\"cursor: pointer; max-width: 40%;\"";
         }
@@ -352,7 +402,7 @@ function displayCards(cards, id, numberToCard)    {
     for(i=0; i<cards.length; ++i)   {
         cardType = deckStyle + numberToCard[cards[i]];
         cardImgs += "<img src=\"images/decks/" + cardType + "\"";
-        if(id == "playercards" && draw == 0) {
+        if(id == "playercards" && drawCheck == 0) {
             flipOnClick = " onclick=\"flipCard(" + i + ")\" style=\"cursor: pointer;\"></img>";
             cardImgs += flipOnClick;
         }
