@@ -115,3 +115,12 @@ nav {
 		margin-left: 0%;
 	}
 }
+
+@media only screen and (max-width: 400px) {
+	.nav-link	{
+		font-size: 18px;
+	}
+	.ptext	{
+		font-size: 22px;
+	}
+}

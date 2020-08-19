@@ -13,10 +13,25 @@ var deckCost = {"numbers" : 100, "quarantine" : 1000, "dog" : 10000,
 var allDecks = Object.keys(deckCost);
 
 
-document.getElementById("playermoney").innerHTML = "Your Money: $" + pMoney.toString();
+document.getElementById("playermoney").innerHTML = "Your Money: $" + addCommas(pMoney.toString());
 removeDecks();
 displayShop();
 displayPlayerDecks();
+
+//adds commas to a string of numbers
+function addCommas(money)   {
+    if(money.length < 4)
+        return money;
+    var i, counter = 0;
+    for(i = money.length-1; i >= 0; --i) {
+        ++counter;
+        if(counter-1 == 3)  {
+            money = money.slice(0, i+1) + "," + money.slice(i+1);
+            counter = 1;
+        }
+    }
+    return money;
+}
 
 //removes decks that have previously been purchased
 function removeDecks () {
@@ -36,7 +51,7 @@ function buyDeck(newDeck)    {
     }
     pMoney -= deckCost[newDeck];
     localStorage['pm'] = pMoney.toString();
-    document.getElementById("playermoney").innerHTML = "Your Money: $" + pMoney.toString();
+    document.getElementById("playermoney").innerHTML = "Your Money: $" + addCommas(pMoney.toString());
     localStorage['dOwned'] += "," + newDeck;
     decksOwned.push(newDeck);
     displayShop();

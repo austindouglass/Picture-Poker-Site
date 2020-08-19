@@ -16,7 +16,6 @@ lose red: rgb(210, 43, 43)
 button gray: rgb(189, 189, 189)
 
 */
-
 //localStorage['pm'] = '100';
 
 //current objective: work on shop and new decks
@@ -35,6 +34,47 @@ window.onresize = resizingUI;
 
 setupGame();
 
+//setupCards - either gets cards from storage or setups new cards
+function setupCards()   {
+    if(localStorage['gcards'] == null || JSON.parse(localStorage['gcards']) == null)  {        
+        deck = resetDeck();
+        result = setHand(5, deck);
+        dealersHand = result[0];
+        deck = result[1];
+
+        result = setHand(5, deck);
+        playersHand = result[0];
+        deck = result[1];
+        const data = {
+            dh: dealersHand.toString(),
+            ph: playersHand.toString(),
+            d:  deck.toString()
+        };
+        localStorage['gcards'] = JSON.stringify(data);
+    }
+    else   {
+        const data = JSON.parse(localStorage['gcards']);
+        dealersHand = data.dh.split(",");
+        playersHand = data.ph.split(',');
+        deck        = data.d.split(',');
+    }
+}
+
+//addCommas - adds commas to a string of numbers
+function addCommas(money)   {
+    if(money.length < 4)
+        return money;
+    var i, counter = 0;
+    for(i = money.length-1; i >= 0; --i) {
+        ++counter;
+        if(counter-1 == 3)  {
+            money = money.slice(0, i+1) + "," + money.slice(i+1);
+            counter = 1;
+        }
+    }
+    return money;
+}
+
 //adjustMoney - changes players money depending on round result and bet
 function adjustMoney(answer)  {    
     if("YOU-WON" == answer) {
@@ -42,8 +82,12 @@ function adjustMoney(answer)  {
     }
     else if("YOU-LOSE" == answer)   {
         pMoney -= pBet*betMultiplier;
+        if(pMoney < 0)  {
+            pMoney = 0;
+        }
     }
     localStorage['pm'] = pMoney.toString();
+    localStorage['gcards'] = null;
 }
 
 //raiseBet - increments bet multiplier and redisplays money
@@ -57,8 +101,8 @@ function raiseBet() {
 //displayMoney - displays players money and bet amount
 function displayMoney()    {
     var style = "<p style=\"text-align: center; color: rgb(255, 228, 0); font-size: 2em; -webkit-text-stroke: 1.5px black;\">";
-    var html = style + "BET: $" + pBet*betMultiplier + "</p>";
-    document.getElementById("playertext").innerHTML  = "Player:  $" + (pMoney);
+    var html = style + "BET: $" + addCommas((pBet*betMultiplier).toString()) + "</p>";
+    document.getElementById("playertext").innerHTML  = "Player:  $" + addCommas(pMoney.toString());
     document.getElementById("playerbet").innerHTML  = html;
 }
 
@@ -90,22 +134,15 @@ function resizingUI()   {
 
 //setupGame - sets core game components to be ready for starting game
 function setupGame()    {
-    betMultiplier = 1;
     if(pMoney < 10)
         pBet = 1;
     else
         pBet = parseInt(pMoney/10);
+    betMultiplier = 1;
     roundButton = false;
     //drawCheck has three stages: 0 no draws, 1 dealer draws, 2 dealer and player draws
     drawCheck = 0;
-    deck = resetDeck();
-    result = setHand(5, deck);
-    dealersHand = result[0];
-    deck = result[1];
-
-    result = setHand(5, deck);
-    playersHand = result[0];
-    deck = result[1];
+    setupCards();
 
     displayCards([0,0,0,0,0], "dealercards", numberToCard);
     displayCards(playersHand, "playercards", numberToCard);
@@ -113,13 +150,13 @@ function setupGame()    {
     drawButton();
 }
 
-//newRoundButton - clicking button starts new round
+//newRoundButton - clicking results button starts new round also updates money
 function newRoundButton(answer)    {
     var style = "style=\"cursor: pointer; max-width: 60%; margin-left: 20%;\""
     if(window.innerWidth < 800) {
         style = "style=\"cursor: pointer; max-width: 100%;\""
     }
-    document.getElementById("playertext").innerHTML  = "Player:  $" + pMoney;
+    document.getElementById("playertext").innerHTML  = "Player:  $" + addCommas(pMoney.toString());
     var buttonHtml = "<img src=\"images/ui/button-" + answer + ".png\" onclick=\"setupGame()\" " + style + "></img>";
     document.getElementById("playerbutton").innerHTML  = buttonHtml;
 }
